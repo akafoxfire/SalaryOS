@@ -1724,21 +1724,67 @@ const mainContentEl = document.querySelector(".main-content");
 
 const topNavbarEl = document.querySelector(".top-navbar");
 
+const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+function openSidebarMobile() {
+
+    sidebarEl.classList.add("mobile-open");
+
+    if (sidebarOverlay) sidebarOverlay.classList.add("show");
+
+}
+
+function closeSidebarMobile() {
+
+    sidebarEl.classList.remove("mobile-open");
+
+    if (sidebarOverlay) sidebarOverlay.classList.remove("show");
+
+}
+
 if (sidebarToggle) {
 
     sidebarToggle.addEventListener("click", () => {
 
-        sidebarEl.classList.toggle("collapsed");
+        if (window.innerWidth <= 992) {
 
-        sidebarEl.classList.toggle("mobile-open");
+            sidebarEl.classList.contains("mobile-open")
+                ? closeSidebarMobile()
+                : openSidebarMobile();
 
-        mainContentEl.classList.toggle("expanded");
+        } else {
 
-        topNavbarEl.classList.toggle("expanded");
+            sidebarEl.classList.toggle("collapsed");
+
+            mainContentEl.classList.toggle("expanded");
+
+            topNavbarEl.classList.toggle("expanded");
+
+        }
 
     });
 
 }
+
+if (sidebarOverlay) {
+
+    sidebarOverlay.addEventListener("click", closeSidebarMobile);
+
+}
+
+document.querySelectorAll(".menu li").forEach(item => {
+
+    item.addEventListener("click", () => {
+
+        if (window.innerWidth <= 992) {
+
+            closeSidebarMobile();
+
+        }
+
+    });
+
+});
 
 // ==========================================
 // NOTIFICATIONS
