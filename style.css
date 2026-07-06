@@ -1535,3 +1535,136 @@ body.dark .cancel-btn {
         width: 100%;
     }
 }
+
+/* ==========================================
+   Mobile responsive overhaul
+========================================== */
+
+@media(max-width: 768px) {
+
+    .content {
+        padding: 85px 16px 30px;
+    }
+
+    .top-navbar {
+        padding: 0 16px;
+    }
+
+    .navbar-left {
+        gap: 10px;
+    }
+
+    .navbar-left h3 {
+        font-size: 16px;
+    }
+
+    .profile {
+        gap: 12px;
+    }
+
+    .profile i {
+        font-size: 18px;
+    }
+
+    .avatar-circle {
+        width: 32px;
+        height: 32px;
+        font-size: 13px;
+    }
+
+    .notification-dropdown, .profile-dropdown {
+        width: 260px;
+        right: -60px;
+    }
+
+    .welcome-section h2 {
+        font-size: 26px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .hero-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 22px;
+        padding: 28px 22px;
+    }
+
+    .hero-card h1 {
+        font-size: 36px;
+    }
+
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-card canvas {
+        height: 260px !important;
+    }
+
+    .action-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .transactions-card,
+    .goal-section,
+    .asset-section {
+        padding: 18px;
+        overflow-x: auto;
+    }
+
+    .transaction-table {
+        min-width: 600px;
+    }
+
+    .section-header h3, .section-header h2 {
+        font-size: 18px;
+    }
+
+    .custom-modal {
+        width: 92vw;
+    }
+
+    .login-card {
+        padding: 32px 22px;
+    }
+}
+
+@media(max-width: 480px) {
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .action-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-card h1 {
+        font-size: 30px;
+    }
+
+    .welcome-section h2 {
+        font-size: 22px;
+    }
+
+    .notification-dropdown, .profile-dropdown {
+        width: 230px;
+        right: -80px;
+    }
+}
