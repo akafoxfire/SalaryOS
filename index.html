@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SalaryOS</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Google Identity Services (for Sign in with Google) -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+</head>
+
+<body>
+
+    <!-- ========================= -->
+    <!-- Login Screen -->
+    <!-- ========================= -->
+
+    <div class="login-overlay" id="loginOverlay">
+
+        <div class="login-card">
+
+            <div class="login-logo">
+                <i class="bi bi-cash-coin"></i>
+                SalaryOS
+            </div>
+
+            <p class="login-subtitle">Apna paisa, apna control.</p>
+
+            <div id="googleSignInBtn"></div>
+
+            <div class="login-divider"><span>or</span></div>
+
+            <button class="guest-btn" id="guestLoginBtn">
+                Continue as Guest
+            </button>
+
+            <p class="login-note">
+                Google Sign-In needs a Google Client ID configured by the site owner.
+                Use "Continue as Guest" to explore SalaryOS without it.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="wrapper">
+
+        <!-- Sidebar Start -->
+
+        <aside class="sidebar">
+
+            <div class="logo">
+
+                <i class="bi bi-cash-coin"></i>
+                SalaryOS
+
+            </div>
+
+
+
+            <ul class="menu">
+
+                <li class="active" data-page="dashboard">
+                    <i class="bi bi-grid-fill"></i>
+                    Dashboard
+                </li>
+
+                <li data-page="salary">
+                    <i class="bi bi-cash-stack"></i>
+                    Salary
+                </li>
+
+                <li data-page="expense">
+                    <i class="bi bi-wallet2"></i>
+                    Expenses
+                </li>
+
+                <li data-page="goal">
+                    <i class="bi bi-bullseye"></i>
+                    Goals
+                </li>
+
+                <li data-page="asset">
+                    <i class="bi bi-pie-chart-fill"></i>
+                    Assets
+                </li>
+
+                <li data-page="report">
+                    <i class="bi bi-file-earmark-text-fill"></i>
+                    Reports
+                </li>
+
+                <li data-page="setting">
+                    <i class="bi bi-gear-fill"></i>
+                    Settings
+                </li>
+
+            </ul>
+
+
+        </aside>
+
+        <!-- Sidebar End -->
+
+
+
+        <!-- Main Content -->
+
+        <main class="main-content">
+
+            <nav class="top-navbar">
+
+                <div class="navbar-left">
+
+                    <i class="bi bi-list" id="sidebarToggle"></i>
+
+                    <h3 id="pageTitle">Dashboard</h3>
+
+                </div>
+
+                <div class="profile">
+
+                    <i class="bi bi-moon-fill" id="darkModeBtn" title="Toggle dark mode"></i>
+
+                    <div class="notification-wrap">
+
+                        <i class="bi bi-bell-fill" id="notificationBtn"></i>
+
+                        <span class="notif-badge" id="notifBadge" style="display:none;">0</span>
+
+                        <div class="notification-dropdown" id="notificationDropdown">
+
+                            <div class="dropdown-header">Notifications</div>
+
+                            <div id="notificationList"></div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="profile-wrap">
+
+                        <div class="avatar-circle" id="profileBtn"></div>
+
+                        <div class="profile-dropdown" id="profileDropdown">
+
+                            <div class="dropdown-header">
+                                <div class="avatar-circle small" id="profileDropdownAvatar"></div>
+                                <div>
+                                    <div class="profile-name" id="profileDropdownName"></div>
+                                    <div class="profile-role" id="profileDropdownRole"></div>
+                                </div>
+                            </div>
+
+                            <a class="dropdown-item" data-page="setting" id="profileSettingsLink">
+                                <i class="bi bi-gear"></i> Settings
+                            </a>
+
+                            <a class="dropdown-item" id="logoutBtn">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </nav>
+
+
+
+            <div class="content">
+
+                <div id="dashboardPage">
+
+                    <div class="welcome-section">
+
+                        <div>
+
+                            <h2>
+                                <span id="greeting"></span>,
+                                <span id="username"></span> 👋
+                            </h2>
+
+                            <p id="current-date"></p>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Hero Card -->
+
+                    <div class="hero-card">
+
+                        <div class="hero-left">
+
+                            <p class="hero-title">Total Net Worth</p>
+
+                            <h1 id="netWorth"></h1>
+
+                            <span class="growth">
+
+                                <i class="bi bi-arrow-up"></i>
+
+                                <span id="growthText"></span>
+
+                            </span>
+
+                        </div>
+
+                        <div class="hero-right">
+
+                            <div class="circle" id="heroHealthPercent"></div>
+
+                            <p>Financial Health</p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="dashboard-grid">
+
+                        <div class="card-box">
+
+                            <div class="card-icon salary">
+
+                                <i class="bi bi-cash-stack"></i>
+
+                            </div>
+
+                            <h5>Monthly Salary</h5>
+
+                            <h2 id="salaryAmount"></h2>
+
+                        </div>
+
+                        <div class="card-box">
+
+                            <div class="card-icon expense">
+
+                                <i class="bi bi-wallet2"></i>
+
+                            </div>
+
+                            <h5>Total Expense</h5>
+
+                            <h2 id="expenseAmount"></h2>
+
+                        </div>
+
+                        <div class="card-box">
+
+                            <div class="card-icon asset">
+
+                                <i class="bi bi-pie-chart-fill"></i>
+
+                            </div>
+
+                            <h5>Total Assets</h5>
+
+                            <h2 id="assetAmount"></h2>
+
+                        </div>
+
+                        <div class="card-box">
+
+                            <div class="card-icon goal">
+
+                                <i class="bi bi-bullseye"></i>
+
+                            </div>
+
+                            <h5>Goals Completed</h5>
+
+                            <h2 id="goalAmount"></h2>
+
+                        </div>
+
+                    </div>
+
+                    <!-- ========================= -->
+                    <!-- Charts Section -->
+                    <!-- ========================= -->
+
+                    <div class="charts-grid">
+
+                        <!-- Income vs Expense -->
+
+                        <div class="chart-card">
+
+                            <div class="chart-header">
+
+                                <h3>Income vs Expense</h3>
+
+                            </div>
+
+                            <canvas id="incomeExpenseChart"></canvas>
+
+                        </div>
+
+
+                        <!-- Expense Distribution -->
+
+                        <div class="chart-card">
+
+                            <div class="chart-header">
+
+                                <h3>Expense Distribution</h3>
+
+                            </div>
+
+                            <canvas id="expenseChart"></canvas>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Recent Transactions -->
+                    <div id="transactionSection">
+
+                        <div class="transactions-card">
+
+                            <div class="section-header">
+
+                                <h3>Recent Transactions</h3>
+
+                                <button class="view-all-btn">
+                                    View All
+                                </button>
+
+                            </div>
+
+                            <table class="transaction-table">
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>Date</th>
+
+                                        <th>Category</th>
+
+                                        <th>Description</th>
+
+                                        <th>Amount</th>
+
+                                        <th>Status</th>
+                                        <th>Action</th>
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody id="transactionBody">
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+                    </div>
+                    <!-- ==========================================
+     Goals
+========================================== -->
+                    <div id="goalSection">
+                        <div class="goal-section">
+
+                            <div class="section-header">
+
+                                <h2>Financial Goals</h2>
+
+                                <button id="addGoalBtn" class="primary-btn">
+
+                                    <i class="bi bi-plus-circle"></i>
+
+                                    Add Goal
+
+                                </button>
+
+                            </div>
+
+                            <div class="table-responsive">
+
+                                <table class="transaction-table">
+
+                                    <thead>
+
+                                        <tr>
+
+                                            <th>Goal</th>
+
+                                            <th>Saved</th>
+
+                                            <th>Target</th>
+
+                                            <th>Progress</th>
+
+                                            <th>Deadline</th>
+
+                                            <th>Status</th>
+
+                                            <th>Action</th>
+
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody id="goalBody">
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- ==========================================
+     Assets
+========================================== -->
+
+                    <div class="asset-section">
+
+                        <div class="section-header">
+
+                            <h2>Assets</h2>
+
+                        </div>
+
+                        <div class="table-responsive">
+
+                            <table class="transaction-table">
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>Category</th>
+
+                                        <th>Description</th>
+
+                                        <th>Amount</th>
+
+                                        <th>Action</th>
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody id="assetBody">
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Quick Actions -->
+
+                    <div class="quick-actions">
+
+                        <h2>Quick Actions</h2>
+
+                        <div class="action-grid">
+
+                            <button class="action-btn" id="addExpenseBtn">
+                                <i class="bi bi-wallet2"></i>
+                                Add Expense
+                            </button>
+
+                            <button class="action-btn" id="addIncomeBtn">
+                                <i class="bi bi-cash-stack"></i>
+                                Add Income
+                            </button>
+
+                            <button class="action-btn" id="addAssetBtn">
+                                <i class="bi bi-pie-chart-fill"></i>
+                                Add Asset
+                            </button>
+
+                            <button class="action-btn" id="quickGoalBtn">
+                                <i class="bi bi-bullseye"></i>
+                                Set Goal
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div id="expenseStatsSection">
+
+                        <div class="stats-grid">
+
+                            <div class="stat-card">
+                                <h5>This Month Income</h5>
+                                <h2 id="monthIncome"></h2>
+                            </div>
+
+                            <div class="stat-card">
+                                <h5>This Month Expense</h5>
+                                <h2 id="monthExpense"></h2>
+                            </div>
+
+                            <div class="stat-card">
+                                <h5>Total Savings</h5>
+                                <h2 id="monthSavings"></h2>
+                            </div>
+
+                            <div class="stat-card">
+                                <h5>Transactions</h5>
+                                <h2 id="transactionCount"></h2>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <!-- Financial Summary -->
+
+                    <div class="summary-grid">
+
+                        <!-- Financial Health -->
+
+                        <div class="summary-card">
+
+                            <div class="summary-header">
+
+                                <h3>Financial Health</h3>
+
+                                <span id="healthPercent"></span>
+
+                            </div>
+
+                            <div class="progress-bar">
+
+                                <div class="progress-fill health"></div>
+
+                            </div>
+
+                            <p class="summary-text" id="healthMessage"></p>
+
+                        </div>
+
+                        <!-- Emergency Fund -->
+
+                        <div class="summary-card">
+
+                            <div class="summary-header">
+
+                                <h3>Emergency Fund</h3>
+
+                                <span id="emergencyFundAmount"></span>
+
+                            </div>
+
+                            <div class="progress-bar">
+
+                                <div class="progress-fill emergency"></div>
+
+                            </div>
+
+                            <p class="summary-text" id="emergencyFundStatus"></p>
+
+                        </div>
+
+                        <!-- Monthly Budget -->
+
+                        <div class="summary-card">
+
+                            <div class="summary-header">
+
+                                <h3>Monthly Budget</h3>
+
+                                <span id="budgetAmount"></span>
+
+                            </div>
+
+                            <div class="progress-bar">
+
+                                <div class="progress-fill budget"></div>
+
+                            </div>
+
+                            <p class="summary-text" id="budgetStatus"></p>
+
+                        </div>
+
+                        <!-- Savings Rate -->
+
+                        <div class="summary-card">
+
+                            <div class="summary-header">
+
+                                <h3>Savings Rate</h3>
+
+                                <span id="savingRate"></span>
+
+                            </div>
+
+                            <div class="progress-bar">
+
+                                <div class="progress-fill saving"></div>
+
+                            </div>
+
+                            <p class="summary-text" id="savingMessage"></p>
+
+                        </div>
+
+                    </div>
+
+                    <!-- ==========================================
+     Reports
+========================================== -->
+
+                    <div class="report-section">
+
+                        <div class="section-header">
+
+                            <h2>Financial Report</h2>
+
+                            <div class="report-export-btns">
+                                <button class="view-all-btn" id="exportPdfBtn">
+                                    <i class="bi bi-file-earmark-pdf"></i> PDF
+                                </button>
+                                <button class="view-all-btn excel-btn" id="exportExcelBtn">
+                                    <i class="bi bi-file-earmark-excel"></i> Excel
+                                </button>
+                            </div>
+
+                        </div>
+
+                        <div class="stats-grid">
+
+                            <div class="stat-card">
+
+                                <h5>Total Income</h5>
+
+                                <h2 id="reportIncome"></h2>
+
+                            </div>
+
+                            <div class="stat-card">
+
+                                <h5>Total Expense</h5>
+
+                                <h2 id="reportExpense"></h2>
+
+                            </div>
+
+                            <div class="stat-card">
+
+                                <h5>Total Savings</h5>
+
+                                <h2 id="reportSavings"></h2>
+
+                            </div>
+
+                            <div class="stat-card">
+
+                                <h5>Savings Rate</h5>
+
+                                <h2 id="reportSavingRate"></h2>
+
+                            </div>
+
+
+                        </div>
+
+                        <div class="table-responsive">
+
+                            <table class="transaction-table">
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>Category</th>
+
+                                        <th>Income</th>
+
+                                        <th>Expense</th>
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody id="reportTableBody">
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="salaryPage" style="display:none;">
+
+                    <h2>Salary Overview</h2>
+
+                    <div class="stats-grid">
+
+                        <div class="stat-card">
+                            <h5>Monthly Salary</h5>
+                            <h2 id="salaryMonthly"></h2>
+                        </div>
+
+                        <div class="stat-card">
+                            <h5>Yearly Salary (Est.)</h5>
+                            <h2 id="salaryYearly"></h2>
+                        </div>
+
+                        <div class="stat-card">
+                            <h5>Monthly Growth</h5>
+                            <h2 id="salaryGrowth"></h2>
+                        </div>
+
+                        <div class="stat-card">
+                            <h5>Total Income Recorded</h5>
+                            <h2 id="salaryTotalIncome"></h2>
+                        </div>
+
+                    </div>
+
+                    <div class="transactions-card">
+
+                        <div class="section-header">
+
+                            <h3>Employee Details</h3>
+
+                        </div>
+
+                        <table class="transaction-table">
+                            <tbody>
+                                <tr>
+                                    <td><strong>Name</strong></td>
+                                    <td id="salaryEmpName"></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Designation</strong></td>
+                                    <td id="salaryEmpDesignation"></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Sector</strong></td>
+                                    <td id="salaryEmpSector"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                    <div class="transactions-card">
+
+                        <div class="section-header">
+
+                            <h3>Salary / Income History</h3>
+
+                            <button class="view-all-btn" id="salaryAddIncomeBtn">
+                                Add Income
+                            </button>
+
+                        </div>
+
+                        <table class="transaction-table">
+
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Source</th>
+                                    <th>Description</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="salaryHistoryBody">
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+                <div id="expensePage" style="display:none;">
+                    <h2>Expense Management</h2>
+
+                    <div id="expenseContent"></div>
+                </div>
+
+                <div id="goalPage" style="display:none;">
+
+                    <h2>Goal Management</h2>
+
+                    <div class="stats-grid">
+
+                        <div class="stat-card">
+                            <h5>Total Goals</h5>
+                            <h2 id="totalGoals"></h2>
+                        </div>
+
+                        <div class="stat-card">
+                            <h5>Completed</h5>
+                            <h2 id="completedGoals"></h2>
+                        </div>
+
+                        <div class="stat-card">
+                            <h5>Active Goals</h5>
+                            <h2 id="activeGoals"></h2>
+                        </div>
+
+                        <div class="stat-card">
+                            <h5>Total Target</h5>
+                            <h2 id="goalTarget"></h2>
+                        </div>
+
+                    </div>
+
+
+
+                    <div id="goalContent"></div>
+
+                </div>
+
+                <div id="assetPage" style="display:none;">
+
+    <h2>Asset Management</h2>
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+            <h5>Total Assets</h5>
+            <h2 id="totalAssetsCount"></h2>
+        </div>
+
+        <div class="stat-card">
+            <h5>Total Value</h5>
+            <h2 id="totalAssetValue"></h2>
+        </div>
+
+        <div class="stat-card">
+            <h5>Highest Asset</h5>
+            <h2 id="highestAsset"></h2>
+        </div>
+
+        <div class="stat-card">
+            <h5>Average Value</h5>
+            <h2 id="averageAssetValue"></h2>
+        </div>
+
+    </div>
+
+    <div id="assetContent"></div>
+
+</div>
+
+                <div id="reportPage" style="display:none;"></div>
+
+                <div id="settingPage" style="display:none;">
+
+                    <h2>Settings</h2>
+
+                    <div class="quick-actions">
+
+                        <h2>Profile</h2>
+
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" id="settingName" placeholder="Your name">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Designation</label>
+                            <input type="text" id="settingDesignation" placeholder="Your designation">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Sector</label>
+                            <input type="text" id="settingSector" placeholder="Your sector">
+                        </div>
+
+                        <button class="save-btn" id="saveProfileBtn">Save Profile</button>
+
+                    </div>
+
+                    <div class="quick-actions">
+
+                        <h2>Data Management</h2>
+
+                        <div class="action-grid">
+
+                            <button class="action-btn" id="exportDataBtn">
+                                <i class="bi bi-download"></i>
+                                Export Data
+                            </button>
+
+                            <button class="action-btn" id="importDataBtn">
+                                <i class="bi bi-upload"></i>
+                                Import Data
+                            </button>
+
+                            <button class="action-btn" id="resetDataBtn" style="background:#ef4444;">
+                                <i class="bi bi-trash"></i>
+                                Reset All Data
+                            </button>
+
+                        </div>
+
+                        <input type="file" id="importDataInput" accept=".json" style="display:none;">
+
+                    </div>
+
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- Add Expense Modal -->
+    <!-- ========================= -->
+
+    <div class="modal-overlay" id="expenseModal">
+
+        <div class="custom-modal">
+
+            <div class="modal-header">
+
+                <h2>Add Expense</h2>
+
+                <button id="closeModal">&times;</button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <div class="form-group">
+
+                    <label>Category</label>
+
+                    <select id="expenseCategory">
+
+                        <option>Food</option>
+                        <option>Transport</option>
+                        <option>Shopping</option>
+                        <option>Bills</option>
+                        <option>Entertainment</option>
+
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Amount</label>
+
+                    <input type="number" id="expenseAmountInput" placeholder="Enter amount">
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Date</label>
+
+                    <input type="date" id="expenseDate">
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Description</label>
+
+                    <input type="text" id="expenseDescription" placeholder="Example: Domino's Pizza">
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button class="cancel-btn" id="cancelExpense">
+
+                    Cancel
+
+                </button>
+
+                <button class="save-btn" id="saveExpense">
+
+                    Save Expense
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- Add Income Modal -->
+    <!-- ========================= -->
+
+    <div class="modal-overlay" id="incomeModal">
+
+        <div class="custom-modal">
+
+            <div class="modal-header">
+
+                <h2>Add Income</h2>
+
+                <button id="closeIncomeModal">&times;</button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <div class="form-group">
+
+                    <label>Income Source</label>
+
+                    <select id="incomeCategory">
+
+                        <option>Salary</option>
+                        <option>Bonus</option>
+                        <option>Freelancing</option>
+                        <option>Interest</option>
+                        <option>Other</option>
+
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Amount</label>
+
+                    <input type="number" id="incomeAmountInput" placeholder="Enter amount">
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Date</label>
+
+                    <input type="date" id="incomeDate">
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Description</label>
+
+                    <input type="text" id="incomeDescription" placeholder="Example : July Salary">
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button class="cancel-btn" id="cancelIncome">
+
+                    Cancel
+
+                </button>
+
+                <button class="save-btn" id="saveIncome">
+
+                    Save Income
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- Add Asset Modal -->
+    <!-- ========================= -->
+
+    <div class="modal-overlay" id="assetModal">
+
+        <div class="custom-modal">
+
+            <div class="modal-header">
+
+                <h2>Add Asset</h2>
+
+                <button id="closeAssetModal">&times;</button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <div class="form-group">
+
+                    <label>Asset Type</label>
+
+                    <select id="assetCategory">
+
+                        <option>Cash</option>
+                        <option>Bank Balance</option>
+                        <option>Fixed Deposit</option>
+                        <option>Gold</option>
+                        <option>Mutual Fund</option>
+                        <option>Stocks</option>
+                        <option>Property</option>
+                        <option>Vehicle</option>
+                        <option>Other</option>
+
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Current Value</label>
+
+                    <input type="number" id="assetAmountInput" placeholder="Enter asset value">
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Description</label>
+
+                    <input type="text" id="assetDescription" placeholder="Example : SBI Savings Account">
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button class="cancel-btn" id="cancelAsset">
+                    Cancel
+                </button>
+
+                <button class="save-btn" id="saveAsset">
+                    Save Asset
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- Add Goal Modal -->
+    <!-- ========================= -->
+
+    <div class="modal-overlay" id="goalModal">
+
+        <div class="custom-modal">
+
+            <div class="modal-header">
+
+                <h2>Add Goal</h2>
+
+                <button id="closeGoalModal">&times;</button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label>Goal Name</label>
+                    <input type="text" id="goalTitle" placeholder="Example : Buy Car">
+                </div>
+
+                <div class="form-group">
+                    <label>Target Amount</label>
+                    <input type="number" id="goalTarget" placeholder="Enter target amount">
+                </div>
+
+                <div class="form-group">
+                    <label>Saved Amount</label>
+                    <input type="number" id="goalSaved" placeholder="Enter saved amount">
+                </div>
+
+                <div class="form-group">
+                    <label>Deadline</label>
+                    <input type="date" id="goalDeadline">
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button class="cancel-btn" id="cancelGoal">
+                    Cancel
+                </button>
+
+                <button class="save-btn" id="saveGoal">
+                    Save Goal
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- PDF Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+    <!-- Excel Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <script src="app.js"></script>
+
+</body>
+
+</html>
