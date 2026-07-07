@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://akafoxfire.github.io/SalaryOS/sitemap.xml
