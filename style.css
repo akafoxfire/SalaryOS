@@ -1709,3 +1709,23 @@ body.dark .cancel-btn {
         margin-left: 52px;
     }
 }
+
+/* ==========================================
+   Logo images (sidebar + login screen)
+========================================== */
+
+.sidebar-logo-img {
+    width: 32px;
+    height: 32px;
+    vertical-align: middle;
+    margin-right: 8px;
+    border-radius: 8px;
+}
+
+.login-logo-img {
+    width: 36px;
+    height: 36px;
+    vertical-align: middle;
+    margin-right: 8px;
+    border-radius: 8px;
+}
