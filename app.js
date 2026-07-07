@@ -74,6 +74,10 @@ function getBlankDashboardData() {
 
 let dashboardData = getBlankDashboardData();
 
+let currentUID = null;
+
+let fb = {};
+
 // ==========================================
 // LOCAL STORAGE
 // ==========================================
@@ -87,6 +91,19 @@ function saveData() {
         JSON.stringify(dashboardData)
 
     );
+
+    if (currentUID && fb.setDoc && fb.doc && fb.db) {
+
+        fb.setDoc(
+            fb.doc(fb.db, "users", currentUID),
+            dashboardData
+        ).catch(err => {
+
+            console.error("Cloud save failed:", err);
+
+        });
+
+    }
 
 }
 
@@ -453,7 +470,7 @@ function editGoal(id) {
 
     document.getElementById("goalTitle").value = goal.title;
 
-    document.getElementById("goalTarget").value = goal.target;
+    document.getElementById("goalTargetInput").value = goal.target;
 
     document.getElementById("goalSaved").value = goal.saved;
 
@@ -1551,78 +1568,143 @@ if (resetDataBtn) {
 }
 
 // ==========================================
-// LOGIN SCREEN (Google Sign-In + Guest mode)
+// FIREBASE (Auth + Firestore)
 // ==========================================
-// NOTE: Real "Sign in with Google" requires a Google Cloud OAuth
-// Client ID (from https://console.cloud.google.com/apis/credentials).
-// Replace GOOGLE_CLIENT_ID below with your own to enable it.
-// Without it, the button stays inactive and "Continue as Guest"
-// is the working path.
-
-const GOOGLE_CLIENT_ID = "1091128650329-an45at0ibos3uu0v64f7od113n68d94c.apps.googleusercontent.com";
 
 const loginOverlay = document.getElementById("loginOverlay");
 
-function decodeJwt(token) {
+const firebaseReady = (async function initFirebase() {
 
-    try {
+    const { initializeApp } =
+        await import("https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js");
 
-        return JSON.parse(atob(token.split(".")[1]));
+    const {
+        getAuth, GoogleAuthProvider, signInWithPopup,
+        onAuthStateChanged, signOut
+    } = await import("https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js");
 
-    } catch (e) {
+    const { getFirestore, doc, getDoc, setDoc } =
+        await import("https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js");
 
-        return null;
+    const firebaseConfig = {
+        apiKey: "AIzaSyBG50oY2r3DbayeM_Nqj01as3F6PmWM1XM",
+        authDomain: "salaryos-82436.firebaseapp.com",
+        projectId: "salaryos-82436",
+        storageBucket: "salaryos-82436.firebasestorage.app",
+        messagingSenderId: "865406635505",
+        appId: "1:865406635505:web:83b7b457a89cd808fac850",
+        measurementId: "G-R7XD10N602"
+    };
 
-    }
+    const app = initializeApp(firebaseConfig);
 
-}
+    fb.auth = getAuth(app);
+    fb.db = getFirestore(app);
+    fb.doc = doc;
+    fb.getDoc = getDoc;
+    fb.setDoc = setDoc;
+    fb.signOut = signOut;
+    fb.signInWithPopup = signInWithPopup;
+    fb.googleProvider = new GoogleAuthProvider();
 
-function handleGoogleCredential(response) {
+    onAuthStateChanged(fb.auth, (user) => {
 
-    const payload = decodeJwt(response.credential);
+        if (user) {
 
-    if (!payload) return;
-
-    dashboardData.user.name = payload.name || dashboardData.user.name;
-
-    dashboardData.user.email = payload.email || "";
-
-    dashboardData.user.picture = payload.picture || "";
-
-    saveData();
-
-    completeLogin();
-
-}
-
-function initGoogleSignIn() {
-
-    if (!window.google || GOOGLE_CLIENT_ID.startsWith("YOUR_")) {
-
-        const btn = document.getElementById("googleSignInBtn");
-
-        if (btn) {
-
-            btn.innerHTML =
-                `<button class="guest-btn" style="opacity:.6;cursor:not-allowed;" disabled>
-                    <i class="bi bi-google"></i> Sign in with Google (setup required)
-                </button>`;
+            loadDataFromCloud(user);
 
         }
 
-        return;
+    });
+
+    return fb;
+
+})();
+
+firebaseReady.catch(err => {
+
+    console.error("Firebase failed to initialize:", err);
+
+});
+
+async function loadDataFromCloud(firebaseUser) {
+
+    currentUID = firebaseUser.uid;
+
+    try {
+
+        const userDocRef = fb.doc(fb.db, "users", firebaseUser.uid);
+
+        const docSnap = await fb.getDoc(userDocRef);
+
+        if (docSnap.exists()) {
+
+            dashboardData = docSnap.data();
+
+            if (!dashboardData.finance.goals) dashboardData.finance.goals = [];
+
+            if (!dashboardData.finance.assets) dashboardData.finance.assets = [];
+
+            if (!dashboardData.finance.chartData) dashboardData.finance.chartData = { transactions: [] };
+
+        } else {
+
+            dashboardData = getBlankDashboardData();
+
+            dashboardData.user.name = firebaseUser.displayName || "User";
+
+            dashboardData.user.email = firebaseUser.email || "";
+
+            dashboardData.user.picture = firebaseUser.photoURL || "";
+
+            await fb.setDoc(userDocRef, dashboardData);
+
+        }
+
+        localStorage.setItem("salaryOS", JSON.stringify(dashboardData));
+
+        completeLogin();
+
+    } catch (err) {
+
+        console.error("Cloud data load failed:", err);
+
+        alert("Could not load your cloud data. Check your internet connection and try again.");
 
     }
 
-    google.accounts.id.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: handleGoogleCredential
-    });
+}
 
-    google.accounts.id.renderButton(
-        document.getElementById("googleSignInBtn"),
-        { theme: "outline", size: "large", width: 260 }
-    );
+const googleSignInBtn = document.getElementById("googleSignInBtn");
+
+if (googleSignInBtn) {
+
+    googleSignInBtn.addEventListener("click", async () => {
+
+        googleSignInBtn.disabled = true;
+
+        try {
+
+            await firebaseReady;
+
+            await fb.signInWithPopup(fb.auth, fb.googleProvider);
+
+            // onAuthStateChanged (above) picks up the signed-in user
+            // and loads their cloud data automatically.
+
+        } catch (err) {
+
+            console.error("Google sign-in failed:", err);
+
+            alert("Google sign-in failed: " + err.message);
+
+        } finally {
+
+            googleSignInBtn.disabled = false;
+
+        }
+
+    });
 
 }
 
@@ -1648,17 +1730,23 @@ const guestLoginBtn = document.getElementById("guestLoginBtn");
 
 if (guestLoginBtn) {
 
-    guestLoginBtn.addEventListener("click", completeLogin);
+    guestLoginBtn.addEventListener("click", () => {
+
+        currentUID = null;
+
+        completeLogin();
+
+    });
 
 }
 
 if (localStorage.getItem("salaryOS_loggedIn") === "true") {
 
+    // Hide immediately for a returning guest. If this was actually a
+    // Google-linked session, onAuthStateChanged (above) will still fire
+    // once Firebase loads and will refresh with the latest cloud data.
+
     loginOverlay.style.display = "none";
-
-} else {
-
-    initGoogleSignIn();
 
 }
 
@@ -1666,9 +1754,27 @@ const logoutBtn = document.getElementById("logoutBtn");
 
 if (logoutBtn) {
 
-    logoutBtn.addEventListener("click", () => {
+    logoutBtn.addEventListener("click", async () => {
+
+        try {
+
+            if (currentUID && fb.signOut) {
+
+                await fb.signOut(fb.auth);
+
+            }
+
+        } catch (err) {
+
+            console.error("Sign-out error:", err);
+
+        }
+
+        currentUID = null;
 
         localStorage.removeItem("salaryOS_loggedIn");
+
+        localStorage.removeItem("salaryOS");
 
         location.reload();
 
@@ -2629,6 +2735,16 @@ let goalEditIndex = -1;
 // Open Modal
 addGoalBtn.addEventListener("click", () => {
 
+    goalEditIndex = -1;
+
+    document.getElementById("goalTitle").value = "";
+
+    document.getElementById("goalTargetInput").value = "";
+
+    document.getElementById("goalSaved").value = "";
+
+    document.getElementById("goalDeadline").value = "";
+
     goalModal.style.display = "flex";
 
 });
@@ -2642,12 +2758,16 @@ quickGoalBtn.addEventListener("click", () => {
 // Close Button
 closeGoalModal.addEventListener("click", () => {
 
+    goalEditIndex = -1;
+
     goalModal.style.display = "none";
 
 });
 
 // Cancel Button
 cancelGoal.addEventListener("click", () => {
+
+    goalEditIndex = -1;
 
     goalModal.style.display = "none";
 
@@ -2674,7 +2794,7 @@ document.getElementById("saveGoal").onclick = () => {
 
     const title = document.getElementById("goalTitle").value.trim();
 
-    const target = Number(document.getElementById("goalTarget").value);
+    const target = Number(document.getElementById("goalTargetInput").value);
 
     const saved = Number(document.getElementById("goalSaved").value);
 
@@ -2738,7 +2858,7 @@ document.getElementById("saveGoal").onclick = () => {
 
     document.getElementById("goalTitle").value = "";
 
-    document.getElementById("goalTarget").value = "";
+    document.getElementById("goalTargetInput").value = "";
 
     document.getElementById("goalSaved").value = "";
 
