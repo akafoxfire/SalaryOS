@@ -143,6 +143,11 @@
                     Settings
                 </li>
 
+                <li data-page="about">
+                    <i class="bi bi-info-circle-fill"></i>
+                    About Us
+                </li>
+
             </ul>
 
 
@@ -538,6 +543,16 @@
                                 Set Goal
                             </button>
 
+                            <button class="action-btn" id="quickEmergencyBtn">
+                                <i class="bi bi-shield-fill-check"></i>
+                                Emergency Fund
+                            </button>
+
+                            <button class="action-btn" id="quickBudgetBtn">
+                                <i class="bi bi-piggy-bank-fill"></i>
+                                Set Budget
+                            </button>
+
                         </div>
 
                     </div>
@@ -605,7 +620,15 @@
 
                                 <h3>Emergency Fund</h3>
 
-                                <span id="emergencyFundAmount"></span>
+                                <div class="summary-header-right">
+
+                                    <span id="emergencyFundAmount"></span>
+
+                                    <button class="summary-edit-btn" id="editEmergencyFundBtn" title="Set emergency fund">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+
+                                </div>
 
                             </div>
 
@@ -627,7 +650,15 @@
 
                                 <h3>Monthly Budget</h3>
 
-                                <span id="budgetAmount"></span>
+                                <div class="summary-header-right">
+
+                                    <span id="budgetAmount"></span>
+
+                                    <button class="summary-edit-btn" id="editBudgetBtn" title="Set monthly budget">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+
+                                </div>
 
                             </div>
 
@@ -969,6 +1000,91 @@
                     </div>
 
                 </div>
+
+                <div id="aboutPage" style="display:none;">
+
+                    <div class="about-hero">
+
+                        <img src="logo-icon.svg" alt="SalaryOS logo" class="about-logo">
+
+                        <h2>SalaryOS</h2>
+
+                        <p>Apna paisa, apna control.</p>
+
+                    </div>
+
+                    <div class="quick-actions">
+
+                        <h2>What is SalaryOS?</h2>
+
+                        <p class="summary-text">
+                            SalaryOS is a free personal finance dashboard built to help you
+                            track your salary, expenses, savings goals, and assets in one
+                            simple place — without spreadsheets or complicated apps. It works
+                            entirely in your browser, and when you sign in with Google, your
+                            data stays in sync across every device you use.
+                        </p>
+
+                    </div>
+
+                    <div class="quick-actions">
+
+                        <h2>Features</h2>
+
+                        <ul class="about-feature-list">
+
+                            <li><i class="bi bi-cash-stack"></i> Salary &amp; income tracking</li>
+                            <li><i class="bi bi-wallet2"></i> Expense management with categories</li>
+                            <li><i class="bi bi-bullseye"></i> Savings goals with progress tracking</li>
+                            <li><i class="bi bi-pie-chart-fill"></i> Asset portfolio overview</li>
+                            <li><i class="bi bi-shield-fill-check"></i> Emergency fund tracking</li>
+                            <li><i class="bi bi-piggy-bank-fill"></i> Monthly budget monitoring</li>
+                            <li><i class="bi bi-file-earmark-bar-graph"></i> Financial health score &amp; reports</li>
+                            <li><i class="bi bi-file-earmark-pdf"></i> Export data to PDF &amp; Excel</li>
+                            <li><i class="bi bi-google"></i> Google sign-in with cross-device sync</li>
+
+                        </ul>
+
+                    </div>
+
+                    <div class="quick-actions">
+
+                        <h2>About the Creator</h2>
+
+                        <p class="summary-text">
+                            SalaryOS is built and maintained by Rakesh Kumar Dudhawal, a
+                            developer focused on practical, no-nonsense personal finance
+                            tools.
+                        </p>
+
+                        <div class="about-links">
+
+                            <a href="https://github.com/akafoxfire" target="_blank" rel="noopener" class="view-all-btn">
+                                <i class="bi bi-github"></i> GitHub
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                    <div class="quick-actions">
+
+                        <h2>Feedback &amp; Support</h2>
+
+                        <p class="summary-text">
+                            Found a bug or have a feature idea? Open an issue on the GitHub
+                            repository above, or reach out through the profile linked to
+                            this project. SalaryOS is actively improved based on real user
+                            feedback.
+                        </p>
+
+                        <p class="summary-text" style="margin-top:10px;">
+                            Version 1.0 &middot; Made in India 🇮🇳
+                        </p>
+
+                    </div>
+
+                </div>
             </div>
         </main>
 
@@ -1255,6 +1371,97 @@
 
                 <button class="save-btn" id="saveGoal">
                     Save Goal
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- Emergency Fund Modal -->
+    <!-- ========================= -->
+
+    <div class="modal-overlay" id="emergencyFundModal">
+
+        <div class="custom-modal">
+
+            <div class="modal-header">
+
+                <h2>Emergency Fund</h2>
+
+                <button id="closeEmergencyFundModal">&times;</button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label>Target Amount</label>
+                    <input type="number" id="emergencyFundTargetInput" placeholder="Example : 500000">
+                </div>
+
+                <div class="form-group">
+                    <label>Current Saved Amount</label>
+                    <input type="number" id="emergencyFundCurrentInput" placeholder="Example : 150000">
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button class="cancel-btn" id="cancelEmergencyFundModal">
+                    Cancel
+                </button>
+
+                <button class="save-btn" id="saveEmergencyFundBtn">
+                    Save
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- Monthly Budget Modal -->
+    <!-- ========================= -->
+
+    <div class="modal-overlay" id="budgetModal">
+
+        <div class="custom-modal">
+
+            <div class="modal-header">
+
+                <h2>Monthly Budget</h2>
+
+                <button id="closeBudgetModal">&times;</button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label>Monthly Budget Limit</label>
+                    <input type="number" id="budgetLimitInput" placeholder="Example : 30000">
+                </div>
+
+                <p class="summary-text" style="margin-top:-10px;">
+                    "Used" updates automatically as you add expenses.
+                </p>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button class="cancel-btn" id="cancelBudgetModal">
+                    Cancel
+                </button>
+
+                <button class="save-btn" id="saveBudgetBtn">
+                    Save
                 </button>
 
             </div>
