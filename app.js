@@ -2867,6 +2867,189 @@ document.getElementById("saveGoal").onclick = () => {
 };
 
 // ==========================================
+// EMERGENCY FUND SETUP
+// ==========================================
+
+const emergencyFundModal = document.getElementById("emergencyFundModal");
+
+const editEmergencyFundBtn = document.getElementById("editEmergencyFundBtn");
+
+const closeEmergencyFundModal = document.getElementById("closeEmergencyFundModal");
+
+const cancelEmergencyFundModal = document.getElementById("cancelEmergencyFundModal");
+
+const saveEmergencyFundBtn = document.getElementById("saveEmergencyFundBtn");
+
+function openEmergencyFundModal() {
+
+    document.getElementById("emergencyFundTargetInput").value =
+        dashboardData.finance.emergencyFund.target || "";
+
+    document.getElementById("emergencyFundCurrentInput").value =
+        dashboardData.finance.emergencyFund.current || "";
+
+    emergencyFundModal.style.display = "flex";
+
+}
+
+if (editEmergencyFundBtn) {
+
+    editEmergencyFundBtn.addEventListener("click", openEmergencyFundModal);
+
+}
+
+const quickEmergencyBtn = document.getElementById("quickEmergencyBtn");
+
+if (quickEmergencyBtn) {
+
+    quickEmergencyBtn.addEventListener("click", openEmergencyFundModal);
+
+}
+
+function closeEmergencyModal() {
+
+    emergencyFundModal.style.display = "none";
+
+}
+
+if (closeEmergencyFundModal) {
+
+    closeEmergencyFundModal.addEventListener("click", closeEmergencyModal);
+
+}
+
+if (cancelEmergencyFundModal) {
+
+    cancelEmergencyFundModal.addEventListener("click", closeEmergencyModal);
+
+}
+
+if (saveEmergencyFundBtn) {
+
+    saveEmergencyFundBtn.addEventListener("click", () => {
+
+        const target = Number(
+            document.getElementById("emergencyFundTargetInput").value
+        );
+
+        const current = Number(
+            document.getElementById("emergencyFundCurrentInput").value
+        );
+
+        if (!target || target <= 0) {
+
+            alert("Please enter a valid target amount.");
+
+            return;
+
+        }
+
+        if (current < 0) {
+
+            alert("Current saved amount cannot be negative.");
+
+            return;
+
+        }
+
+        dashboardData.finance.emergencyFund.target = target;
+
+        dashboardData.finance.emergencyFund.current = current;
+
+        saveData();
+
+        refreshDashboard();
+
+        closeEmergencyModal();
+
+    });
+
+}
+
+// ==========================================
+// MONTHLY BUDGET SETUP
+// ==========================================
+
+const budgetModal = document.getElementById("budgetModal");
+
+const editBudgetBtn = document.getElementById("editBudgetBtn");
+
+const closeBudgetModal = document.getElementById("closeBudgetModal");
+
+const cancelBudgetModal = document.getElementById("cancelBudgetModal");
+
+const saveBudgetBtn = document.getElementById("saveBudgetBtn");
+
+function openBudgetModal() {
+
+    document.getElementById("budgetLimitInput").value =
+        dashboardData.finance.budget.limit || "";
+
+    budgetModal.style.display = "flex";
+
+}
+
+if (editBudgetBtn) {
+
+    editBudgetBtn.addEventListener("click", openBudgetModal);
+
+}
+
+const quickBudgetBtn = document.getElementById("quickBudgetBtn");
+
+if (quickBudgetBtn) {
+
+    quickBudgetBtn.addEventListener("click", openBudgetModal);
+
+}
+
+function closeBudgetModalFn() {
+
+    budgetModal.style.display = "none";
+
+}
+
+if (closeBudgetModal) {
+
+    closeBudgetModal.addEventListener("click", closeBudgetModalFn);
+
+}
+
+if (cancelBudgetModal) {
+
+    cancelBudgetModal.addEventListener("click", closeBudgetModalFn);
+
+}
+
+if (saveBudgetBtn) {
+
+    saveBudgetBtn.addEventListener("click", () => {
+
+        const limit = Number(
+            document.getElementById("budgetLimitInput").value
+        );
+
+        if (!limit || limit <= 0) {
+
+            alert("Please enter a valid budget limit.");
+
+            return;
+
+        }
+
+        dashboardData.finance.budget.limit = limit;
+
+        saveData();
+
+        refreshDashboard();
+
+        closeBudgetModalFn();
+
+    });
+
+}
+
+// ==========================================
 // SIDEBAR NAVIGATION
 // ==========================================
 
@@ -2884,7 +3067,9 @@ const pages = {
 
     report: document.getElementById("reportPage"),
 
-    setting: document.getElementById("settingPage")
+    setting: document.getElementById("settingPage"),
+
+    about: document.getElementById("aboutPage")
 
 };
 
